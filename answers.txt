@@ -1,0 +1,66 @@
+Name:Lauren Yeung
+UCLA ID:104456482
+
+
+-------------------------------------------------------------------------------
+
+Response to Exercise 1:
+Yes, sys_getpid() call will return the correct value.
+%eax is changed to hold the pid for the current process, then returns that value when the process is done.
+
+Response to Exercise 3:
+To change polling to blocking:
+In mpos-kern.h,
+added a pointer to a waiting_process.
+In mpos-kern.c,
+changed INT_SYS_WAIT to have a child waiting process set to the parent and set the parent state to be blocked.
+Also changed INT_SYS_EXIT to set the waiting process to be runnable and to set the eax register to the child's return value.
+
+Response to Exercise 4:
+To fix the bug:
+Change INT_SYS_WAIT and INT_SYS_EXIT in mpos-kern.c.
+Change wait to check for zombies, set the process to be empty, and set the eax to the exit status.
+Change exit to check for a  waiting process and set its parents status to be runnable.
+If no waiting process, the current state is set to a zombie.
+
+
+Anything else you'd like us to know:
+
+Extra credit exercises:
+
+Response to Exercise 5:
+void start(void) {
+	int x = 0;
+
+	int* volatile xptr = &x;	
+
+	pid_t p = sys_fork();
+	if (p == 0)
+	{	
+		x += 1;
+		if (*ptr==0) *ptr +=1;
+	}
+	else if (p > 0)
+		sys_wait(p);
+	app_printf("%d",x);
+	sys_exit(0);
+}
+
+Since process isolation is an problem, I use a pointer. The forked process uses the old variable rather than the a copy of the primitive.  
+Since volatile doesn't get optimized by the compiler, volatile is used for the pointer.
+
+Response to Exercise 6:
+Create and set a new process with threads.
+The process should start with an empty stack.
+the new thread executes the start_function function.
+The thread number in mpos.h was changed so users were replaced with newthread.
+ newthread in mpos-kern.c and store in eax.
+Call do_newthread() to 
+
+Response to Exercise 7:
+Similar to exercise 6 with threads.
+Uses wait and exit.
+The thread number in mpos.h was changed so users were replaced with kill.
+The mpos-app.h modififed to have thread.
+
+
